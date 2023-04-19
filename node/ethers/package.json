@@ -1,0 +1,10 @@
+{
+  "name": "ethers",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.3.0"
+  }
+}

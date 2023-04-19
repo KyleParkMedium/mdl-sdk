@@ -1,0 +1,7 @@
+<준비물>
+1. 인스턴스를 만들 MSP(저는 org1 - org1admin 을 사용하였음.)
+    -> 요 MSP는 cryptogen으로 만들거나, ca서버에 요청해서 만들면 되고, 이름 같은 건 generate 했을 때 입력했던 값으로
+2. connection.json(or yaml)
+    -> wallet에 org1admin.id 요딴거 만들기 위해 필요함
+    -> 템플릿으로 만들 수 있는 스크립트가 있어서 첨부함.
+    -> fabric-sample 내의 ccp-generate.sh을 사용하였음.
