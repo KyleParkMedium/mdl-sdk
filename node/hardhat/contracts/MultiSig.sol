@@ -62,11 +62,7 @@ contract MultiSig is Owner {
     function MultiSigWallet(
         address[] memory _owners,
         uint _required
-    )
-        public
-        isAdmin
-        validRequirement(owners.length + _owners.length, _required)
-    {
+    ) public isAdmin {
         for (uint i = 0; i < _owners.length; i++) {
             this.addOwner(_owners[i]);
         }
@@ -194,9 +190,7 @@ contract MultiSig is Owner {
 
     /// @dev Allows to change the number of required confirmations. Transaction has to be sent by wallet.
     /// @param _required Number of required confirmations.
-    function changeRequirement(
-        uint _required
-    ) public onlyWallet validRequirement(owners.length, _required) {
+    function changeRequirement(uint _required) public onlyWallet {
         required = _required;
         emit RequirementChange(_required);
     }

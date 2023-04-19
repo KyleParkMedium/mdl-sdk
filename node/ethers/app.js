@@ -1,5 +1,5 @@
 import fs from "fs";
-import { ethers, keccak256 } from "ethers";
+import { ethers } from "ethers";
 
 let contract;
 
@@ -35,7 +35,7 @@ async function loadContract(wallet, contractName) {
   );
 
   const jsonData = fs.readFileSync(
-    `./artifacts/contracts/${contractName}.sol/${contractName}.json`,
+    `./artifacts/${contractName}.json`,
     "utf8",
     function (err) {
       if (err) throw err;
@@ -68,6 +68,31 @@ async function invokeContract() {
   console.log(b);
 }
 
+async function invokeMint() {
+  const wallet = new ethers.Wallet(
+    "0xe331b0ca57f33194d1c43c8a2dcf5447d1e1dd8737e32d37f10256c71becf9c7",
+    provider
+  );
+  await loadContract(wallet, "Mint");
+
+  const amount = ethers.parseEther("10");
+  try {
+    const t = await contract._transfer(amount, { value: amount });
+    await t.wait();
+  } catch (error) {
+    console.log("An error occurred:", error);
+  }
+
+  await loadContract(wallet, "Vault");
+  // user balanceOf
+  const b = await contract.balanceOf(wallet.address);
+  console.log(`${wallet.address}'s balance : `, b);
+
+  // vault contract balanceOf
+  const vb = await contract.contractBalanceOf();
+  console.log(`Vault Contract's balance : `, vb);
+}
+
 async function sendTx() {
   const wallet = new ethers.Wallet(
     "0xa26b1aaa44b2e450028b0ce8c982edc4acfebd258a6b87fc8c1ced35568204ec",
@@ -77,7 +102,7 @@ async function sendTx() {
   const hashedMessage = ethers.hashMessage("test");
 
   const tx = {
-    to: "0x26d3Ef03ca9dC1281b4eC716e818dAA850e4Be57",
+    to: "0x04dBBc8494794fA94874b013E37Cb809a64d9B70",
     value: ethers.parseEther("5.0"),
     gasLimit: 2100000, // 가스 한도
     gasPrice: ethers.parseUnits("100", "gwei"),
@@ -157,6 +182,7 @@ async function ecrecover(message, v, r, s) {
 }
 
 async function main() {
+  invokeMint();
   invokeContract();
   sendTx();
   signMsg();

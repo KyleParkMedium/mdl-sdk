@@ -1,6 +1,10 @@
 compile:
-	cd /Users/park/code/smart-contract && npx hardhat compile
+	cd ../hardhat && npx hardhat compile
 
 deploy:
-	cd /Users/park/code/smart-contract && npx hardhat run scripts/deployVault.ts --network ganache
-	cd /Users/park/code/smart-contract && npx hardhat run scripts/deployValidator.ts --network ganache 
+	cd ../hardhat && npx hardhat run scripts/deployVault.ts --network ganache
+	cd ../hardhat && npx hardhat run scripts/deployMint.ts --network ganache
+	cd ../hardhat && npx hardhat run scripts/deployValidator.ts --network ganache 
+
+deployTruffle:
+	cd ../truffle && npx truffle migrate --network ganache

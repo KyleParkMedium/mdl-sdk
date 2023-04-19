@@ -26,9 +26,9 @@ contract Vault {
         return true;
     }
 
-    function deposit() public payable {
-        balances[msg.sender] += msg.value;
-        emit lock(msg.sender, msg.value, balances[msg.sender]);
+    function deposit(address account) public payable {
+        balances[account] += msg.value;
+        emit lock(account, msg.value, balances[account]);
     }
 
     // 중개자만 호출 가능 또는 특정 컨트랙트만 호출 가능

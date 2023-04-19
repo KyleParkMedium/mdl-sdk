@@ -12,11 +12,6 @@ contract Owner {
     event OwnerRemoval(address indexed owner);
 
     /*
-     *  views
-     */
-    uint public constant MAX_OWNER_COUNT = 50;
-
-    /*
      *  Storage
      */
     mapping(address => bool) public isOwner;
@@ -58,29 +53,11 @@ contract Owner {
         _;
     }
 
-    modifier validRequirement(uint ownerCount, uint _required) {
-        require(
-            ownerCount <= MAX_OWNER_COUNT &&
-                _required <= ownerCount &&
-                _required != 0 &&
-                ownerCount != 0
-        );
-        _;
-    }
-
-    /*
-     *  Receive
-     */
-    /// @dev Receive function allows to deposit ether.
-    receive() external payable {
-        if (msg.value > 0) emit Deposit(msg.sender, msg.value);
-    }
-
     /// @dev Allows to add a new owner. Transaction has to be sent by wallet.
     /// @param owner Address of new owner.
     function addOwner(
         address owner
-    ) public onlyWallet notNull(owner) returns (bool) {
+    ) public isAdmin notNull(owner) returns (bool) {
         // ownerDoesNotExist(owner)
         if (isOwner[owner]) {
             emit OwnerAddition(owner, false);
@@ -94,7 +71,7 @@ contract Owner {
 
     /// @dev Allows to remove an owner. Transaction has to be sent by wallet.
     /// @param owner Address of owner.
-    function removeOwner(address owner) public onlyWallet ownerExists(owner) {
+    function removeOwner(address owner) public isAdmin ownerExists(owner) {
         isOwner[owner] = false;
         for (uint i = 0; i < owners.length; i++)
             if (owners[i] == owner) {
@@ -110,7 +87,7 @@ contract Owner {
     function replaceOwner(
         address owner,
         address newOwner
-    ) public onlyWallet ownerExists(owner) ownerDoesNotExist(newOwner) {
+    ) public isAdmin ownerExists(owner) ownerDoesNotExist(newOwner) {
         for (uint i = 0; i < owners.length; i++)
             if (owners[i] == owner) {
                 owners[i] = newOwner;
